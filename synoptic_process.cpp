@@ -9,7 +9,7 @@
 
 //TODO: Comunicação socket tcp
 //a comunicação ocorre sempre dentro do main, toda vez que ele abre. Temporização de 50s pode ser um problema
-
+//tratamento do range de input
 using namespace std;
 
 
@@ -43,7 +43,7 @@ int main(){
     while(t.elapsedMilliseconds() < 50.0);
     t.stop();
     mfile.open("historiador.txt", ios_base::app);
-    mfile << "Iteracao " << i << ") h = "<< nivel << " Qin = " << qin << " Qout = " << qout << " href = " << href <<"\n";
+    mfile << i << ") h = "<< nivel << " Qin = " << qin << " Qout = " << qout << " href = " << href <<"\n";
     mfile.close();
     i++;
 

@@ -13,11 +13,14 @@
 int main() 
 { 
     Timer t;
+    float H;
     do{
     t.start();
     float x0 = 0, y = 1, x = 3, h = 0.2; 
-    printf("\nThe value of y at x is : %f", 
-            rungeKutta(x0, y, x, h)); 
+    
+    H = rungeKutta(x0, y, x, h); //nivel calculado pela variação total
+
+
     while(t.elapsedMilliseconds() < 50.0);
     t.stop();
     }while (true);
