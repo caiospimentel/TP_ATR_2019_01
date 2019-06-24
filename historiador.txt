@@ -1,8 +1,0 @@
-Iteracao 1) h = 0 Qin = 0 Qout = 0 href = 12
-Iteracao 2) h = 0 Qin = 0 Qout = 0 href = 557
-Iteracao 3) h = 0 Qin = 0 Qout = 0 href = 963
-1) h = 0 Qin = 0 Qout = 0 href = 56
-2) h = 0 Qin = 0 Qout = 0 href = 2
-3) h = 0 Qin = 0 Qout = 0 href = 889
-4) h = 0 Qin = 0 Qout = 0 href = 889
-Iteracao 4) h = 0 Qin = 0 Qout = 0 href = 963

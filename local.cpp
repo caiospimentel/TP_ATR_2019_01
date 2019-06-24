@@ -2,7 +2,7 @@
 #include <stdio.h> 
 #include <math.h>
 #include <iostream>
-#include "customLibraries.hpp"
+#include "customLibraries.h"
 
 using namespace std;
 
@@ -14,7 +14,7 @@ void process_thread() {
     float x0 = 0, y = 1, x = 3, h = 0.2; 
     
     H = rungeKutta(x0, y, x, h); //nivel calculado pela variação total
-
+   
 
     while(t.elapsedMilliseconds() < 50.0);
     t.stop();
@@ -67,6 +67,9 @@ int main(int argc, char const *argv[])
     thread plct (softPLC_thread);
 
     cout << "Rodando as threads";
+
+    pt.join();
+    plct.join();
 
 
 

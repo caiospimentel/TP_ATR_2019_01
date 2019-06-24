@@ -1,7 +1,7 @@
 // C program to implement Runge Kutta method 
 #include <stdio.h> 
 #include <math.h>
-#include "customLibraries.hpp"
+#include "customLibraries.h"
   
 // A sample differential equation "dy/dx = (x - y)/2" 
 
