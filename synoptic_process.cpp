@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <chrono>
 #include <fstream>
+#include <sys/socket.h> 
+#include <netinet/in.h> 
+#include <string.h> 
 #include "customLibraries.h"
 
 
