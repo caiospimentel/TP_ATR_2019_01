@@ -6,12 +6,14 @@
 #include <sys/socket.h> 
 #include <netinet/in.h> 
 #include <string.h> 
+#include <arpa/inet.h>
 #include "customLibraries.h"
 
 using namespace std;
 
+
+    //variáveis globais
     float H; //altura em função do tempo, maiúsculo para diferenciar do stepsize da integração
-    float href; //setpoint
     float qin; //vazão de entrada
     mutex mH; //mutex para proteção de H
     mutex mQ; //mutex para a proteção de qin
@@ -46,9 +48,11 @@ void process_thread() {
 void softPLC_thread(){
 
     
-
-    float error, output_H ;
+    float href; //setpoint
+    float error, output_H ; 
     Timer t;
+
+    int porta_servidor = 4000;
 
     //declaração e inicialização do PID
     pid_ctrl_t pid;
@@ -56,6 +60,24 @@ void softPLC_thread(){
 
     //configuração dos parâmetros do PID
     pid_set_gains(&pid, 5, 0.5, 3);
+
+    //inicializar socket
+    struct sockaddr_in endereco_servidor;
+	
+	int socket_cliente;
+
+
+	//Criação de socket para o cliente
+	socket_cliente = socket(AF_INET, SOCK_STREAM, 0);
+    endereco_servidor.sin_family = AF_INET;
+	endereco_servidor.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+	endereco_servidor.sin_port = htons(porta_servidor);
+	memset(&endereco_servidor.sin_zero, 0, 8);
+
+
+    //conexão com o servidor
+    connect(socket_cliente, (struct sockaddr*) &endereco_servidor, sizeof(endereco_servidor));
+
 
     //loop de execução
         while(true){
@@ -70,7 +92,7 @@ void softPLC_thread(){
             output_H = pid_process(&pid, error); //calculo do valor de altura de saida desejado
 
 
-            //daqui pra baixo mt provavelmente errado
+            
             //ação de controle no atuador
             if(output_H > H){
                 mQ.lock();
@@ -94,9 +116,9 @@ void softPLC_thread(){
 
 }
 
-int main(int argc, char const *argv[])
-{
+int main(int argc, char const *argv[]){
     
+    cout << "Início da função main\n" ;
     thread pt (process_thread);
     thread plct (softPLC_thread);
 
