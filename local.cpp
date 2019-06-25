@@ -3,9 +3,6 @@
 #include <math.h>
 #include <iostream>
 #include <mutex>
-#include <sys/socket.h> 
-#include <netinet/in.h> 
-#include <string.h> 
 #include "customLibraries.h"
 
 using namespace std;
@@ -25,6 +22,7 @@ void process_thread() {
 
     float h = 0.2; //step size da integração
     
+    //mutexes de proteção das variáveis globais
     mH.lock();
     mQ.lock();
     H = rungeKutta(qin_inicial, H, qin, h); //nivel calculado pela variação total
@@ -60,7 +58,7 @@ void softPLC_thread(){
     //loop de execução
         while(true){
 
-            //receber parâmetros TCP --href
+          
 
 
 
@@ -70,7 +68,7 @@ void softPLC_thread(){
             output_H = pid_process(&pid, error); //calculo do valor de altura de saida desejado
 
 
-            //daqui pra baixo mt provavelmente errado
+           
             //ação de controle no atuador
             if(output_H > H){
                 mQ.lock();
@@ -86,7 +84,7 @@ void softPLC_thread(){
             while(t.elapsedMilliseconds() < 50.0); //aguarda 50ms no mínimo
             t.stop();
 
-            //Inserir envio TCP
+            
 
 
 
@@ -94,8 +92,10 @@ void softPLC_thread(){
 
 }
 
-int main(int argc, char const *argv[])
+int main()
 {
+    
+    cout << "Inicio do programa";
     
     thread pt (process_thread);
     thread plct (softPLC_thread);

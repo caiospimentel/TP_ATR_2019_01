@@ -1,0 +1,2 @@
+
+1) h = 1 Qin = 0 Qout = 1 href = 0
