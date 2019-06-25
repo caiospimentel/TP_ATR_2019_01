@@ -1,6 +1,10 @@
 // C program to implement Runge Kutta method 
 #include <stdio.h> 
 #include <math.h>
+#include <stdlib.h>
+#include <string>
+
+
 #include "customLibraries.h"
   
 // A sample differential equation "dy/dx = (x - y)/2" 
@@ -13,17 +17,27 @@
 int main() 
 { 
     Timer t;
-    float H;
-    do{
+    float H = 0;
+    float qin = 1;
+    int size = 100;
+    string buffer;
+    
     t.start();
     float x0 = 0, y = 1, x = 3, h = 0.2; 
     
     H = rungeKutta(x0, y, x, h); //nivel calculado pela variação total
 
+    string temp1;
+    snprintf(buffer, sizeof buffer, "%f", H) ;
+    snprintf(temp1, sizeof temp1, "%f", qin) ;
+    buffer = buffer + temp1;
 
-    while(t.elapsedMilliseconds() < 50.0);
+   
+
+            cout << buffer;
+    
     t.stop();
-    }while (true);
+    
 
     return 0;
 } 

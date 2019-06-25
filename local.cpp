@@ -51,8 +51,10 @@ void softPLC_thread(){
     float href; //setpoint
     float error, output_H ; 
     Timer t;
+    char *buffer = malloc(100);
+    memset(buffer, 0, tamanho_buffer);
+    int porta_servidor = atoi(argv[1]);
 
-    int porta_servidor = 4000;
 
     //declaração e inicialização do PID
     pid_ctrl_t pid;
@@ -82,9 +84,14 @@ void softPLC_thread(){
     //loop de execução
         while(true){
 
-            //receber parâmetros TCP --href
+            //enviar parâmetros atuais: -- converter de float para caracter
+            
 
 
+            snprintf(buffer, sizeof buffer, "%f", H);
+            snprintf(buffer, sizeof buffer, "%f", qin);
+
+            cout << buffer;
 
             t.start();
             mH.lock();
@@ -113,6 +120,7 @@ void softPLC_thread(){
 
 
         }
+        free(buffer);
 
 }
 

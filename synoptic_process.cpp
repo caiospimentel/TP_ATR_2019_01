@@ -20,9 +20,9 @@ using namespace std;
 
 //se sobrar tempo, fazer uma thread pra cuidar do input do teclado, comunicando com a principal quando isso ocorrer
 //dessa forma, é possível manter o sistema atualizado, checando sempre no início de houve um novo input
-int main(){
+int main(int argc, char const *argv[]){
     cout << "uepa\n" ;
-    int porta_servidor = 4040; 
+    int porta_servidor = atoi(argv[1]);
     float nivel = 0, qout = 0, qin = 0; //variáveis do processo
     float href = 0; //setpoint
     Timer t;
