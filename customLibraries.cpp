@@ -10,7 +10,7 @@ using namespace std;
 
 
 
-
+//Implementação do PID
 void pid_init(pid_ctrl_t *pid)
 {
     pid_set_gains(pid, 1., 0., 0.);
@@ -83,9 +83,9 @@ float pid_get_frequency(const pid_ctrl_t *pid)
     return pid->frequency;
 }
 
+//Implementação do método de integração Runge Kutta
 
-
-float dydx(float qin, float h) 
+float dif(float qin, float h) 
 
 { 
     
@@ -112,7 +112,7 @@ float rungeKutta(float x0, float y0, float x, float h)
     // step height h 
     int n = (int)((x - x0) / h); 
   
-    float k1, k2, k3, k4, k5; 
+    float k1, k2, k3, k4; 
   
     // Iterate for number of iterations 
     float y = y0; 
@@ -120,10 +120,10 @@ float rungeKutta(float x0, float y0, float x, float h)
     { 
         // Apply Runge Kutta Formulas to find 
         // next value of y 
-        k1 = h*dydx(x0, y); 
-        k2 = h*dydx(x0 + 0.5*h, y + 0.5*k1); 
-        k3 = h*dydx(x0 + 0.5*h, y + 0.5*k2); 
-        k4 = h*dydx(x0 + h, y + k3); 
+        k1 = h*dif(x0, y); 
+        k2 = h*dif(x0 + 0.5*h, y + 0.5*k1); 
+        k3 = h*dif(x0 + 0.5*h, y + 0.5*k2); 
+        k4 = h*dif(x0 + h, y + k3); 
   
         // Update next value of y 
         y = y + (1.0/6.0)*(k1 + 2*k2 + 2*k3 + k4);; 

@@ -10,11 +10,11 @@
 
 using namespace std;
 
-    float H;
-    float href;
-    float qin;
-    mutex mH;
-    mutex mQ;
+    float H; //altura em função do tempo, maiúsculo para diferenciar do stepsize da integração
+    float href; //setpoint
+    float qin; //vazão de entrada
+    mutex mH; //mutex para proteção de H
+    mutex mQ; //mutex para a proteção de qin
 
 void process_thread() { 
    Timer t;
@@ -23,17 +23,21 @@ void process_thread() {
     do{
     t.start();
 
-    float h = 0.2; 
+    float h = 0.2; //step size da integração
     
     mH.lock();
+    mQ.lock();
     H = rungeKutta(qin_inicial, H, qin, h); //nivel calculado pela variação total
-    mH.unlock();
+    mQ.unlock();
+   
 
-    while(t.elapsedMilliseconds() < 50.0);
+    while(t.elapsedMilliseconds() < 50.0); //aguarda 50ms no mínimo
     t.stop();
+
     mQ.lock();
     qin_inicial = qin;
     mQ.unlock();
+    mH.unlock();
     }while (true);
 
 
@@ -51,7 +55,7 @@ void softPLC_thread(){
     pid_init(&pid);
 
     //configuração dos parâmetros do PID
-    pid_set_gains(&pid, 10., 0, 4.);
+    pid_set_gains(&pid, 5, 0.5, 3);
 
     //loop de execução
         while(true){
@@ -79,12 +83,12 @@ void softPLC_thread(){
                 mQ.unlock();
             }
             mH.unlock();
-            while(t.elapsedMilliseconds() < 50.0);
+            while(t.elapsedMilliseconds() < 50.0); //aguarda 50ms no mínimo
             t.stop();
 
             //Inserir envio TCP
 
-            
+
 
         }
 

@@ -43,7 +43,7 @@ int main(){
     
     
     
-    while(t.elapsedMilliseconds() < 50.0);
+    while(t.elapsedMilliseconds() < 50.0); //aguarda 50ms no mínimo
     t.stop();
     mfile.open("historiador.txt", ios_base::app);
     mfile << i << ") h = "<< nivel << " Qin = " << qin << " Qout = " << qout << " href = " << href <<"\n";
