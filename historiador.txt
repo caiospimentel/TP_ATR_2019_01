@@ -1,2 +1,4 @@
-
-1) h = 1 Qin = 0 Qout = 1 href = 0
+1) h = 0 Qin = 0 Qout = 0 href = 0
+1) h = 0 Qin = 0 Qout = 0 href = 0
+1) h = 0 Qin = 0 Qout = 0 href = 0
+1) h = 1 Qin = 2 Qout = 1.41421 href = 4

@@ -1,52 +1,120 @@
+	// C program to implement Runge Kutta method 
 #include <thread>
 #include <stdio.h> 
 #include <math.h>
 #include <iostream>
 #include <mutex>
-#include "customLibraries.h"
-  
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <netinet/in.h>
+#include <sys/time.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sstream>
+#include <cstring>
+#include <thread>
 
-//o valor de qin vai ser recebido do controlador.
+
+int a;
+  
+// A sample differential equation "dy/dx = (x - y)/2" 
+
+
 
   using namespace std;
 
-
-int main() 
-{ 
-
-
-    Timer t;
-    float qin_inicial = 0;
-    float H; //altura em função do tempo, maiúsculo para diferenciar do stepsize da integração
-    float href; //setpoint
-    float qin; //vazão de entrada
-    mutex mH; //mutex para proteção de H
-    mutex mQ; //mutex para a proteção de qin
-
-    cout << "Uepa";
-    do{
-    t.start();
-
-    float h = 0.2; //step size da integração
+int main(int argc, char const *argv[]) 
+        {
     
-    //mutexes de proteção das variáveis globais
-    mH.lock();
-    mQ.lock();
-    H = rungeKutta(qin_inicial, H, qin, h); //nivel calculado pela variação total
-    mQ.unlock();
-   
+          int porta_servidor = atoi(argv[1]);
+      //inicializar socket
+    struct sockaddr_in endereco_servidor;
+	
+	int socket_cliente;
 
-    while(t.elapsedMilliseconds() < 50.0); //aguarda 50ms no mínimo
-    t.stop();
 
-    mQ.lock();
-    qin_inicial = qin;
-    mQ.unlock();
-    mH.unlock();
-    }while (true);
+	//Criação de socket para o cliente
+	socket_cliente = socket(AF_INET, SOCK_STREAM, 0);
+  endereco_servidor.sin_family = AF_INET;
+	endereco_servidor.sin_addr.s_addr = inet_addr("127.0.0.1"); 
+	endereco_servidor.sin_port = htons(porta_servidor);
 
-    return 0;
-} 
+
+    //conexão com o servidor
+    if(connect(socket_cliente, (struct sockaddr*) &endereco_servidor, sizeof(endereco_servidor))){
+		printf("Servidor não encontrado.");
+		close(socket_cliente);
+        //inserir um fork aqui;
+    	}
+
+  //tudo funciona até aqui
+  
+    while(true){
+      cout << "Enviando valores...\n";
+        //enivar valores do buffer
+float H = 1;
+float qin = 2;	
+
+            ostringstream ss;
+            ss << H << " " << qin;
+            string temp = ss.str();
+            char* buffer  = new char[temp.length()+1];
+            strcpy(buffer, temp.c_str()); //buffer carregado com os valores atuais das variáveis
+
+        send(socket_cliente, buffer, strlen(buffer), 0);
+
+        cout << "Valores enviados\n";
+
+
+        cout << "Rebendo HREF do servidor\n";
+
+      char recv_buffer[100];
+        int tamanho_resposta_recebida;
+	      do{
+		      tamanho_resposta_recebida = recv(socket_cliente, recv_buffer, strlen(recv_buffer), 0);
+        	}while(tamanho_resposta_recebida < 0);
+
+      cout << "Valor recebido do servidor:" << recv_buffer;
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
 
 
 

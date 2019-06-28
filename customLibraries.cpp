@@ -34,7 +34,15 @@ void pid_get_gains(const pid_ctrl_t *pid, float *kp, float *ki, float *kd)
     *kd = pid->kd;
 }
 
+float pid_get_integral_limit(const pid_ctrl_t *pid)
+{
+    return pid->integrator_limit;
+}
 
+float pid_get_integral(const pid_ctrl_t *pid)
+{
+    return pid->integrator;
+}
 
 float pid_process(pid_ctrl_t *pid, float error)
 {
@@ -55,8 +63,25 @@ float pid_process(pid_ctrl_t *pid, float error)
     return output;
 }
 
+void pid_set_integral_limit(pid_ctrl_t *pid, float max)
+{
+    pid->integrator_limit = max;
+}
 
+void pid_reset_integral(pid_ctrl_t *pid)
+{
+    pid->integrator = 0.;
+}
 
+void pid_set_frequency(pid_ctrl_t *pid, float frequency)
+{
+    pid->frequency = frequency;
+}
+
+float pid_get_frequency(const pid_ctrl_t *pid)
+{
+    return pid->frequency;
+}
 
 //Implementação do método de integração Runge Kutta
 
@@ -79,29 +104,31 @@ float dif(float qin, float h)
 
 } 
   
-//Para um dado qin ele retorna h
-
+// Finds value of y for a given x using step size h -- para dado qin ele retorna h
+// and initial value y0 at x0. 
 float rungeKutta(float x0, float y0, float x, float h) 
 { 
-    
-    int n = (int)((x - x0) / h); //calcula o número de passos dado o intervalo
+    // Count number of iterations using step size or 
+    // step height h 
+    int n = (int)((x - x0) / h); 
   
     float k1, k2, k3, k4; 
   
-    
+    // Iterate for number of iterations 
     float y = y0; 
     for (int i=1; i<=n; i++) 
     { 
-        //aplicação do método
+        // Apply Runge Kutta Formulas to find 
+        // next value of y 
         k1 = h*dif(x0, y); 
         k2 = h*dif(x0 + 0.5*h, y + 0.5*k1); 
         k3 = h*dif(x0 + 0.5*h, y + 0.5*k2); 
         k4 = h*dif(x0 + h, y + k3); 
   
-        //Novo valor de H
+        // Update next value of y 
         y = y + (1.0/6.0)*(k1 + 2*k2 + 2*k3 + k4);; 
   
-        // Novo valor de qin
+        // Update next value of x 
         x0 = x0 + h; 
     } 
   
@@ -110,19 +137,19 @@ float rungeKutta(float x0, float y0, float x, float h)
 
 
 
-//Implementaçaõ do Timer
+//parte de timer
 
 
    
     void Timer::start()
     {
-        m_StartTime = std::chrono::system_clock::now(); //Encontra o temoo atual e o coloca como início da contagem
+        m_StartTime = std::chrono::system_clock::now();
         m_bRunning = true;
     }
     
     void Timer::stop()
     {
-        m_EndTime = std::chrono::system_clock::now(); //Encontra o temoo atual e o coloca como fim da contagem
+        m_EndTime = std::chrono::system_clock::now();
         m_bRunning = false;
     }
     
@@ -139,12 +166,12 @@ float rungeKutta(float x0, float y0, float x, float h)
             endTime = m_EndTime;
         }
         
-        return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - m_StartTime).count(); //calcula a diferença entre o início e o fim da contagem
+        return std::chrono::duration_cast<std::chrono::milliseconds>(endTime - m_StartTime).count();
     }
     
     double Timer::elapsedSeconds()
     {
-        return elapsedMilliseconds() / 1000.0; //transforma o intervalo de tempo de milissegundos para segundos
+        return elapsedMilliseconds() / 1000.0;
     }
 
    
